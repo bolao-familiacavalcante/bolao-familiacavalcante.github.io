@@ -31,12 +31,6 @@ export const firebaseConfig = {
 // tem o link edita). Para reforçar de verdade, veja a seção "Segurança" no README.
 export const BOLAO_ID = "cavalcante-7ecb1443fa35e032febfcf10";
 
-// URL pública do site (a que você manda na família). É a que o botão "Copiar link" copia.
-// Deixe "" para copiar o endereço atual do navegador — mas aí, rodando em localhost, ele
-// copiaria "http://localhost...". Quando publicar no GitHub Pages, cole aqui o link final,
-// ex.: "https://SEU-USUARIO.github.io/SEU-REPO/".
-export const SITE_URL = "";
-
 // App Check (reCAPTCHA v3) — reforço de segurança (recomendado).
 // Deixe "COLE_AQUI" para NÃO ativar (o app funciona normal sem isso). Para ligar:
 //   1. Crie uma chave reCAPTCHA v3 em https://www.google.com/recaptcha/admin

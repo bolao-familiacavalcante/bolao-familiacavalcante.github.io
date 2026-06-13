@@ -1,7 +1,7 @@
 // Bolão "Família Cavalcante" — app sem build, Firebase via CDN (ou modo local).
 // Ver specs/bolao-familia-cavalcante/ para requisitos e design.
 
-import { firebaseConfig, BOLAO_ID, RECAPTCHA_SITE_KEY, SITE_URL } from "./firebase-config.js";
+import { firebaseConfig, BOLAO_ID, RECAPTCHA_SITE_KEY } from "./firebase-config.js";
 
 // ── Constantes de domínio ────────────────────────────────────────────────────
 const FASES = [
@@ -196,10 +196,10 @@ function render() {
 
 function renderCapa() {
   // sem selo "ao vivo"; só avisa quando está em modo local (dados não compartilhados)
-  const live =
+  const barra =
     backend.modo === "firebase"
       ? ""
-      : `<span class="live live--local">● modo local (só neste aparelho)</span>`;
+      : `<div class="capa__barra"><span class="live live--local">● modo local (só neste aparelho)</span></div>`;
   return `
   <header class="capa">
     <div class="capa__topo">
@@ -211,10 +211,7 @@ function renderCapa() {
         <h1>Família Cavalcante</h1>
       </div>
     </div>
-    <div class="capa__barra">
-      ${live}
-      <button class="btn btn--ghost" data-action="copy-link">Copiar link</button>
-    </div>
+    ${barra}
   </header>`;
 }
 
@@ -266,6 +263,7 @@ function renderCaixinha(j) {
           const acertou = bateu(j, a);
           return `<li class="palpite ${venceu ? "palpite--venc" : ""} ${acertou ? "palpite--bateu" : ""}">
             <span class="palpite__nome">${venceu ? "★ " : ""}${esc(a.nome || "—")}</span>
+            <span class="palpite__leader"></span>
             <span class="palpite__placar">${Number(a.palpiteCasa) || 0} × ${Number(a.palpiteFora) || 0}</span>
           </li>`;
         })
@@ -462,7 +460,8 @@ function renderLinhaAposta(j, a) {
       </span>
       <button class="pago ${a.pago ? "pago--sim" : "pago--nao"}"
               data-action="toggle-pago" data-jid="${j.id}" data-aid="${a.id}"
-              aria-pressed="${a.pago ? "true" : "false"}">${a.pago ? "pago" : "não"}</button>
+              aria-pressed="${a.pago ? "true" : "false"}"
+              title="${a.pago ? "Pago — clique para marcar como não pago" : "Não pago — clique para marcar como pago"}">${a.pago ? "✓ Pago" : "✗ A pagar"}</button>
       <span class="aposta__fim">
         <button class="estrela ${venceu ? "estrela--on" : ""}" data-action="win"
                 data-jid="${j.id}" data-aid="${a.id}" title="Marcar vencedor" aria-label="Marcar vencedor">★</button>
@@ -523,7 +522,6 @@ function onClick(e) {
       if (!j) return;
       return backend.update(`jogos/${jid}`, { vencedorApostaId: j.vencedorApostaId === aid ? null : aid });
     }
-    case "copy-link": return copiarLink(el);
   }
 }
 
@@ -655,22 +653,3 @@ function setResultado(jid, campo, valor) {
   backend.update(`jogos/${jid}`, { resultadoReal: { casa: novo.casa, fora: novo.fora } });
 }
 
-function linkDoBolao() {
-  // prefere a URL pública configurada; senão, usa o endereço atual (sem ?query/#hash)
-  if (SITE_URL && SITE_URL.trim()) return SITE_URL.trim();
-  return location.origin + location.pathname;
-}
-
-async function copiarLink(btn) {
-  const link = linkDoBolao();
-  const ehLocal = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])/.test(link);
-  try {
-    await navigator.clipboard.writeText(link);
-    const txt = btn.textContent;
-    btn.textContent = ehLocal ? "Copiado (link local!)" : "Link copiado!";
-    setTimeout(() => (btn.textContent = txt), 1800);
-    if (ehLocal) aviso("Esse é o link local (localhost). Para compartilhar, publique o site e preencha SITE_URL no firebase-config.js.");
-  } catch {
-    prompt("Copie o link do bolão:", link);
-  }
-}

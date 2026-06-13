@@ -96,9 +96,7 @@ pontuação automática.
 3. Em **Project settings → Seus apps**, registre um **app da Web** e copie o objeto
    `firebaseConfig`.
 4. Cole as chaves em [`firebase-config.js`](firebase-config.js) e troque `BOLAO_ID` por um
-   id secreto seu (16+ caracteres). Ao publicar (Passo 2), preencha também `SITE_URL` com o
-   link final — é o que o botão **"Copiar link"** copia (senão, rodando local, ele copiaria
-   `http://localhost...`).
+   id secreto seu (16+ caracteres).
 5. Na aba **Regras** do Realtime Database, cole o conteúdo de
    [`database.rules.json`](database.rules.json) e **publique**.
 
@@ -149,7 +147,7 @@ Google Cloud Console → **APIs e Serviços → Credenciais** → sua *Browser k
 2. Em **Settings → Pages**, em **Build and deployment**, escolha **Deploy from a branch**,
    branch `main` e pasta `/ (root)`. Salve.
 3. Aguarde ~1 min: o site fica em `https://SEU-USUARIO.github.io/SEU-REPO/`.
-4. Preencha o `SITE_URL` no `firebase-config.js` com esse link e mande no grupo. Pronto. 🎉
+4. Mande esse link no grupo da família. Pronto. 🎉
 
 ## Estrutura
 
@@ -157,7 +155,7 @@ Google Cloud Console → **APIs e Serviços → Credenciais** → sua *Browser k
 index.html            # casca da página (#app, #modal-root, #confirm-root)
 app.js                # lógica: estado, backends (Firebase/local), render, ações, wizard
 styles.css            # direção visual (capa, figurinhas, placar, carimbo de campeão)
-firebase-config.js    # suas chaves do Firebase + BOLAO_ID + SITE_URL  ← edite aqui
+firebase-config.js    # suas chaves do Firebase + BOLAO_ID  ← edite aqui
 database.rules.json   # regras para colar no Realtime Database
 assets/
 └─ family.png         # foto da família (capa do "álbum")
