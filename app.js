@@ -251,9 +251,6 @@ function renderCaixinha(j) {
     ? `${j.resultadoReal.casa} <span>×</span> ${j.resultadoReal.fora}`
     : `— <span>×</span> —`;
   const venc = j.vencedorApostaId && j.apostas && j.apostas[j.vencedorApostaId];
-  const selo = venc
-    ? `<div class="selo-venc">★ Vencedor: ${esc(venc.nome || "—")}</div>`
-    : "";
   const apostas = apostasLista(j).sort((a, b) => (a.criadoEm || 0) - (b.criadoEm || 0));
   const n = apostas.length;
   const palpites = n
@@ -261,14 +258,27 @@ function renderCaixinha(j) {
         .map((a) => {
           const venceu = j.vencedorApostaId === a.id;
           const acertou = bateu(j, a);
+          const marca = venceu ? "🏆 " : acertou ? "✅ " : "";
           return `<li class="palpite ${venceu ? "palpite--venc" : ""} ${acertou ? "palpite--bateu" : ""}">
-            <span class="palpite__nome">${venceu ? "★ " : ""}${esc(a.nome || "—")}</span>
+            <span class="palpite__nome">${marca}${esc(a.nome || "—")}</span>
             <span class="palpite__leader"></span>
             <span class="palpite__placar">${Number(a.palpiteCasa) || 0} × ${Number(a.palpiteFora) || 0}</span>
           </li>`;
         })
         .join("")}</ul>`
     : "";
+
+  // Ganhador explícito: prioriza o vencedor marcado (★); senão, quem cravou o placar real.
+  let ganhador = "";
+  if (venc) {
+    ganhador = `<div class="ganhador">🏆 Ganhador: <strong>${esc(venc.nome || "—")}</strong></div>`;
+  } else if (resultadoCompleto(j)) {
+    const cravaram = apostas.filter((a) => bateu(j, a));
+    ganhador = cravaram.length
+      ? `<div class="ganhador">🏆 ${cravaram.length === 1 ? "Cravou o placar" : "Cravaram o placar"}: <strong>${cravaram.map((a) => esc(a.nome || "—")).join(", ")}</strong></div>`
+      : `<div class="ganhador ganhador--ninguem">Ninguém cravou o placar exato</div>`;
+  }
+
   return `
   <article class="caixinha" data-action="open-jogo" data-jid="${j.id}" tabindex="0" role="button">
     <div class="caixinha__confronto">
@@ -281,7 +291,7 @@ function renderCaixinha(j) {
       <span>${n} ${n === 1 ? "palpite" : "palpites"}</span>
       <span class="caixinha__premio">prêmio ${brl.format(premio(j))}</span>
     </div>
-    ${selo}
+    ${ganhador}
   </article>`;
 }
 

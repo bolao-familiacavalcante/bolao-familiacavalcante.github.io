@@ -147,13 +147,23 @@ body {
   font-family: var(--mono); font-weight: 700; font-size: 19px;
   color: var(--grafite); flex: 0 0 auto;
 }
+.palpite--bateu { background: rgba(31, 138, 91, 0.13); border-radius: 8px; padding-left: 8px; padding-right: 8px; }
+.palpite--bateu .palpite__nome { color: var(--gramado); font-weight: 700; }
 .palpite--bateu .palpite__placar { color: var(--gramado); }
-.palpite--venc .palpite__nome { color: #7a5a10; }
+.palpite--venc { background: rgba(242, 193, 78, 0.22); border-radius: 8px; padding-left: 8px; padding-right: 8px; }
+.palpite--venc .palpite__nome { color: #7a5a10; font-weight: 800; }
 .palpite--venc .palpite__placar { color: #7a5a10; }
-.selo-venc {
-  margin-top: 10px; font-weight: 700; font-size: 13px; color: #7a5a10;
-  background: linear-gradient(90deg, rgba(242, 193, 78, 0.35), rgba(242, 193, 78, 0.12));
-  border: 1px solid rgba(242, 193, 78, 0.6); border-radius: 8px; padding: 6px 10px;
+
+/* faixa do ganhador do bolão (aparece quando há vencedor ou placar real) */
+.ganhador {
+  margin-top: 12px; text-align: center; font-size: 15px; font-weight: 700; color: #7a5a10;
+  background: linear-gradient(90deg, rgba(242, 193, 78, 0.4), rgba(242, 193, 78, 0.14));
+  border: 1px solid rgba(242, 193, 78, 0.65); border-radius: 10px; padding: 9px 12px;
+}
+.ganhador strong { font-weight: 800; }
+.ganhador--ninguem {
+  color: #5b5b52; font-weight: 600;
+  background: rgba(0, 0, 0, 0.05); border-color: rgba(0, 0, 0, 0.12);
 }
 
 /* ── Estados vazios ──────────────────────────────────────────────────────── */
