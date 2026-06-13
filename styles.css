@@ -1,0 +1,335 @@
+/* Bolão "Família Cavalcante" — direção visual: álbum de figurinhas + boletim de jogo.
+   Tokens conforme specs/bolao-familia-cavalcante/design.md §6.2 */
+
+:root {
+  --noite: #101a2e;
+  --noite-2: #16243d;
+  --gramado: #1f8a5b;
+  --foil: #f2c14e;
+  --bilhete: #e4572e;
+  --papel: #f4eee0;
+  --giz: #e8edf4;
+  --grafite: #1a1a1a;
+
+  --r: 14px;
+  --sombra: 0 8px 24px rgba(0, 0, 0, 0.28);
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --ui: "Hanken Grotesk", system-ui, sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--ui);
+  color: var(--giz);
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #1b2c49 0%, var(--noite) 55%) fixed;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+#app {
+  max-width: 720px; margin: 0 auto;
+  padding: 0 max(16px, env(safe-area-inset-right)) 64px max(16px, env(safe-area-inset-left));
+}
+
+/* ── Capa (foto da família como capa do álbum) ───────────────────────────── */
+.capa { padding-top: 16px; }
+.capa__topo { display: flex; align-items: center; gap: 16px; }
+.capa__foto {
+  flex: 0 0 200px; width: 200px;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 2px solid var(--foil);
+  box-shadow: var(--sombra), inset 0 0 0 3px rgba(244, 238, 224, 0.06);
+  line-height: 0;
+}
+/* foto inteira, sem cortes */
+.capa__foto img { width: 100%; height: auto; display: block; }
+.capa__cabecalho { min-width: 0; }
+.capa__sobre {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--foil);
+}
+.capa__cabecalho h1 {
+  font-family: var(--display); font-weight: 800; font-size: clamp(22px, 6vw, 38px);
+  line-height: 0.96; letter-spacing: -0.02em; margin: 3px 0 0; overflow-wrap: break-word;
+}
+
+.capa__barra {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin: 14px 2px 0;
+}
+.live { font-family: var(--mono); font-size: 12px; }
+.live--local { color: var(--foil); }
+.capa__barra .btn--ghost { margin-left: auto; } /* mantém "Copiar link" à direita com ou sem selo */
+
+/* ── Botões ──────────────────────────────────────────────────────────────── */
+.btn {
+  font-family: var(--ui); font-weight: 600; font-size: 15px;
+  border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer;
+  color: var(--grafite); background: var(--giz);
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+.btn:hover { filter: brightness(1.05); }
+.btn:active { transform: translateY(1px); }
+.btn--foil { background: var(--foil); box-shadow: 0 4px 14px rgba(242, 193, 78, 0.3); }
+.btn--ghost {
+  background: transparent; color: var(--giz);
+  border: 1px solid rgba(232, 237, 244, 0.35);
+}
+.btn--perigo {
+  background: transparent; color: var(--bilhete);
+  border: 1px solid rgba(228, 87, 46, 0.5); width: 100%; margin-top: 6px;
+}
+
+/* ── Linha do tempo / fases ──────────────────────────────────────────────── */
+.timeline { margin-top: 22px; }
+.timeline__topo { margin-bottom: 18px; }
+.fase { margin-bottom: 26px; }
+.fase__rotulo {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: #9fb0c9; margin: 0 0 12px;
+  padding-bottom: 8px; border-bottom: 1px solid rgba(232, 237, 244, 0.12);
+}
+.caixinhas { display: grid; gap: 12px; }
+
+/* ── Caixinha (figurinha) ────────────────────────────────────────────────── */
+.caixinha {
+  position: relative; background: var(--papel); color: var(--grafite);
+  border-radius: var(--r); padding: 14px 16px; cursor: pointer;
+  box-shadow: var(--sombra); border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+.caixinha:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34); }
+.caixinha:focus-visible { outline: 3px solid var(--foil); outline-offset: 2px; }
+.caixinha__confronto {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px;
+}
+.time {
+  font-family: var(--display); font-weight: 700; font-size: 19px; letter-spacing: -0.01em;
+  min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.time:first-child { text-align: right; }
+.time--br { color: var(--gramado); }
+.placar {
+  font-family: var(--mono); font-weight: 700; font-size: 22px;
+  background: var(--noite); color: var(--giz); padding: 4px 12px; border-radius: 8px;
+  white-space: nowrap;
+}
+.placar span { opacity: 0.5; margin: 0 2px; }
+.caixinha__rodape {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 12px; font-size: 13px; color: #5b5b52;
+}
+.caixinha__premio { font-family: var(--mono); font-weight: 600; color: var(--gramado); }
+
+/* lista de palpites visível na caixinha */
+.palpites {
+  list-style: none; margin: 12px 0 0; padding: 12px 0 0;
+  border-top: 1px dashed rgba(0, 0, 0, 0.12);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.palpite { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
+.palpite__nome {
+  color: #3a3a32; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.palpite__placar { font-family: var(--mono); font-weight: 700; color: var(--grafite); flex: 0 0 auto; }
+.palpite--bateu .palpite__placar { color: var(--gramado); }
+.palpite--venc .palpite__nome { color: #7a5a10; font-weight: 700; }
+.palpite--venc .palpite__placar { color: #7a5a10; }
+.selo-venc {
+  margin-top: 10px; font-weight: 700; font-size: 13px; color: #7a5a10;
+  background: linear-gradient(90deg, rgba(242, 193, 78, 0.35), rgba(242, 193, 78, 0.12));
+  border: 1px solid rgba(242, 193, 78, 0.6); border-radius: 8px; padding: 6px 10px;
+}
+
+/* ── Estados vazios ──────────────────────────────────────────────────────── */
+.vazio {
+  text-align: center; padding: 40px 16px; color: #9fb0c9;
+  border: 1px dashed rgba(232, 237, 244, 0.22); border-radius: var(--r);
+}
+.vazio p { margin: 0 0 16px; }
+.vazio--mini { padding: 18px; margin: 4px 0; }
+
+/* ── Painel (modal) ──────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(6, 11, 22, 0.66);
+  display: flex; align-items: center; justify-content: center; z-index: 20;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  animation: fade 0.15s ease;
+}
+.painel {
+  width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto;
+  background: var(--noite-2); border-radius: 18px;
+  border: 2px solid var(--foil); padding: 18px 16px;
+  box-shadow: var(--sombra); animation: subir 0.22s ease;
+}
+
+/* diálogo de confirmação (fica por cima do painel do jogo) */
+.overlay--confirm { z-index: 30; background: rgba(6, 11, 22, 0.78); }
+.painel--confirm { max-width: 380px; text-align: center; }
+.painel--confirm h2 {
+  font-family: var(--display); font-weight: 800; font-size: 21px; margin: 4px 0 0;
+}
+.confirm__msg { color: #c7d3e6; font-size: 15px; line-height: 1.45; margin: 12px 0 20px; }
+.confirm__acoes { display: flex; gap: 10px; }
+.confirm__acoes .btn { flex: 1; }
+.btn--perigo-solido {
+  background: var(--bilhete); color: #fff;
+  box-shadow: 0 4px 14px rgba(228, 87, 46, 0.35);
+}
+.painel__topo { display: flex; align-items: center; justify-content: space-between; }
+.painel__topo h2 { font-family: var(--display); font-weight: 700; margin: 0; font-size: 22px; min-width: 0; overflow-wrap: break-word; }
+.painel__titulo span { opacity: 0.45; margin: 0 4px; }
+.painel__titulo { color: var(--gramado); }
+.painel__secao {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: #9fb0c9; margin: 4px 0 8px;
+  padding-bottom: 8px; border-bottom: 1px solid rgba(232, 237, 244, 0.12);
+}
+.icone {
+  background: transparent; border: 0; color: var(--giz); font-size: 18px;
+  cursor: pointer; padding: 6px; border-radius: 8px; min-width: 44px; min-height: 44px;
+}
+.icone--sm { font-size: 15px; color: #9fb0c9; min-width: 40px; min-height: 40px; }
+.icone:hover { background: rgba(255, 255, 255, 0.08); }
+
+.painel__cfg {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px; margin: 16px 0;
+}
+.campo { display: flex; flex-direction: column; gap: 6px; }
+.campo--grow { grid-column: 1 / -1; }
+.campo > span { font-size: 12px; color: #9fb0c9; font-family: var(--mono); letter-spacing: 0.06em; }
+.campo input, .campo select, .aposta input, .placar-edit input {
+  font-family: var(--ui); font-size: 16px; color: var(--giz);
+  background: var(--noite); border: 1px solid rgba(232, 237, 244, 0.16);
+  border-radius: 10px; padding: 10px 12px; width: 100%;
+}
+.campo .btn { padding: 10px 12px; font-size: 14px; }
+input:focus-visible, select:focus-visible, button:focus-visible {
+  outline: 3px solid var(--foil); outline-offset: 1px;
+}
+
+.painel__resultado {
+  background: var(--noite); border-radius: 12px; padding: 12px; margin-bottom: 16px;
+}
+.painel__resultado > span {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: #9fb0c9;
+}
+.placar-edit { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.placar-edit input { width: 64px; text-align: center; font-family: var(--mono); font-size: 20px; }
+.placar-edit__time { font-family: var(--display); font-weight: 700; font-size: 14px; flex: 1; }
+.placar-edit__time:last-of-type { text-align: right; }
+
+/* ── Apostas ─────────────────────────────────────────────────────────────── */
+.apostas { display: flex; flex-direction: column; gap: 4px; }
+.aposta {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  padding: 10px 8px; border-radius: 10px; border: 1px solid transparent;
+}
+.aposta--bateu { background: rgba(31, 138, 91, 0.16); border-color: rgba(31, 138, 91, 0.5); }
+.aposta--venc { background: rgba(242, 193, 78, 0.14); border-color: rgba(242, 193, 78, 0.55); }
+.aposta__nome { flex: 1 1 140px; min-width: 110px; }
+.aposta__palpite { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.aposta__palpite input { width: 48px; text-align: center; font-family: var(--mono); }
+.aposta__palpite span { opacity: 0.5; }
+.aposta__fim { display: flex; align-items: center; gap: 4px; flex: 0 0 auto; margin-left: auto; }
+
+.pago {
+  font-family: var(--mono); font-size: 13px; border: 0; border-radius: 999px;
+  padding: 8px 14px; cursor: pointer; min-width: 56px; min-height: 40px;
+}
+.pago--sim { background: var(--gramado); color: #eafff5; }
+.pago--nao { background: rgba(228, 87, 46, 0.18); color: var(--bilhete); border: 1px solid rgba(228, 87, 46, 0.5); }
+.estrela {
+  background: transparent; border: 0; cursor: pointer; font-size: 20px;
+  color: rgba(232, 237, 244, 0.32); padding: 4px; min-width: 40px; min-height: 40px;
+}
+.estrela--on { color: var(--foil); text-shadow: 0 0 12px rgba(242, 193, 78, 0.6); }
+
+/* Carimbo de campeão — elemento-assinatura */
+.carimbo {
+  position: absolute; right: 36px; top: -6px; transform: rotate(-8deg);
+  font-family: var(--display); font-weight: 800; font-size: 13px; letter-spacing: 0.08em;
+  color: var(--foil); border: 2px solid var(--foil); border-radius: 6px;
+  padding: 2px 8px; text-transform: uppercase; pointer-events: none;
+  background: rgba(16, 26, 46, 0.7); animation: carimbar 0.25s ease;
+}
+
+.painel__acoes {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 16px 0 12px; flex-wrap: wrap;
+}
+.painel__premio { font-size: 14px; color: #c7d3e6; }
+.painel__premio strong { font-family: var(--mono); color: var(--foil); }
+.painel__premio small { display: block; font-size: 12px; color: #9fb0c9; margin-top: 2px; }
+
+/* ── Wizard de criação (2 passos) ────────────────────────────────────────── */
+.painel__passo {
+  font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--foil); margin: 12px 0 0;
+}
+.painel--larga { max-width: 680px; }
+.painel__dica { font-size: 14px; color: #9fb0c9; margin: 10px 0 12px; }
+.painel__dica strong { color: var(--giz); }
+
+/* linha de aposta (criação e edição): nome em cima, placar + ações embaixo
+   (garante que o placar nunca fica cortado, mesmo em telas estreitas) */
+.aposta--rascunho,
+.aposta--edit { flex-direction: column; align-items: stretch; gap: 10px; }
+.aposta--rascunho .aposta__nome,
+.aposta--edit .aposta__nome { width: 100%; flex: none; }
+.aposta__linha2 { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.aposta--rascunho .aposta__palpite input,
+.aposta--edit .aposta__palpite input { width: 56px; }
+.aposta--rascunho .aposta__linha2 .icone--sm { margin-left: auto; }
+.btn--bloco { width: 100%; margin-top: 14px; }
+.btn--salvar {
+  background: var(--gramado); color: #eafff5;
+  box-shadow: 0 4px 14px rgba(31, 138, 91, 0.35);
+}
+
+/* ── Animações (respeitam prefers-reduced-motion) ────────────────────────── */
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes subir { from { transform: translateY(24px); } to { transform: translateY(0); } }
+@keyframes carimbar { from { transform: rotate(-8deg) scale(1.5); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, .overlay, .painel, .carimbo { animation: none !important; transition: none !important; }
+}
+
+/* telas estreitas (celulares pequenos) */
+@media (max-width: 360px) {
+  #app { padding: 0 12px 56px; }
+  .capa__foto { flex: 0 0 150px; width: 150px; }
+  .capa__cabecalho h1 { font-size: clamp(20px, 7vw, 28px); }
+  .capa__barra { gap: 10px; }
+  .time { font-size: 17px; }
+}
+
+/* a partir de tablet: a foto da capa fica bem maior */
+@media (min-width: 600px) {
+  .capa__foto { flex: 0 0 280px; width: 280px; }
+}
+
+/* ── Aviso (toast de erro de salvamento/conexão) ─────────────────────────── */
+.aviso {
+  position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom));
+  transform: translate(-50%, 16px); z-index: 40;
+  max-width: min(92vw, 520px);
+  background: var(--bilhete); color: #fff;
+  font-family: var(--ui); font-size: 14px; font-weight: 600;
+  padding: 12px 16px; border-radius: 12px; box-shadow: var(--sombra);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.aviso--on { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) {
+  .aviso { transition: none; }
+}

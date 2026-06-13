@@ -1,0 +1,35 @@
+{
+  "rules": {
+    "bolao": {
+      "$id": {
+        ".read": true,
+        ".write": true,
+        ".validate": "$id.length >= 16",
+        "nome": { ".validate": "newData.isString() && newData.val().length <= 80" },
+        "jogos": {
+          "$jid": {
+            "fase": { ".validate": "newData.isString() && newData.val().length <= 20" },
+            "adversario": { ".validate": "newData.isString() && newData.val().length <= 60" },
+            "valorPadrao": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000" },
+            "criadoEm": { ".validate": "newData.isNumber()" },
+            "vencedorApostaId": { ".validate": "newData.isString() && newData.val().length <= 64" },
+            "resultadoReal": {
+              "casa": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" },
+              "fora": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" }
+            },
+            "apostas": {
+              "$aid": {
+                "nome": { ".validate": "newData.isString() && newData.val().length <= 60" },
+                "palpiteCasa": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" },
+                "palpiteFora": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99" },
+                "valorPago": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000" },
+                "pago": { ".validate": "newData.isBoolean()" },
+                "criadoEm": { ".validate": "newData.isNumber()" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
